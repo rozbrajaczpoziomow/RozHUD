@@ -24,15 +24,11 @@ import org.apache.logging.log4j.Logger
 object RozHUD {
 	const val DEPENDENCIES = "required-after:forgelin_continuous@[${Reference.KOTLIN_VERSION},);"
 
-	lateinit var logger: Logger
-		private set
 	val networkChannel: SimpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID)
 
 	@Suppress("unused")
 	@Mod.EventHandler
 	fun preInit(e: FMLPreInitializationEvent) {
-		logger = e.modLog
-
 		if(FMLCommonHandler.instance().effectiveSide.isClient) {
 			val inst = OverlayHandler()
 			MinecraftForge.EVENT_BUS.register(inst)

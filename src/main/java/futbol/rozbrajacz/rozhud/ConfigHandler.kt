@@ -36,7 +36,7 @@ object ConfigHandler {
 	@Config.Comment(
 		"Text displayed in the HUD",
 		"Available formats:",
-		"- Server-wide: {tps}, {mspt}, {tick}, {ram_used}, {ram_max}, {cpu_usage}",
+		"- Server-wide: {tps}, {mspt}, {tick}, {ram_used}, {ram_max}, {cpu_usage}, {ping}",
 		"- Current dimension: {dim_id}, {dim_tps}, {dim_mspt}, {dim_entity_count}, {dim_tile_entity_count}, {dim_chunk_count}"
 	)
 	var text = arrayOf(
@@ -68,6 +68,16 @@ object ConfigHandler {
 		@Config.Name("Require operator permissions")
 		@Config.Comment("Only reply to requests from operators")
 		var op = false
+
+		@JvmField
+		@Config.Name("Ignore blocked requests")
+		@Config.Comment(
+			"Data requests can be blocked because enabled is false or op is true and the player is not opped",
+			"Whether to ignore (true) requests, or reply (false) to them with a message saying why the request has been blocked",
+			"Ignoring has the benefit of the player not sending any more requests until they relog",
+			"Replying has the benefit of the player knowing why their request has been blocked, and if they get unblocked, sending back proper data will not require a relog on the player's side"
+		)
+		var ignore = true
 	}
 
 	@Mod.EventBusSubscriber(modid = Reference.MODID)

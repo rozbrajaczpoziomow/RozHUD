@@ -58,7 +58,7 @@ class OverlayHandler {
 		fun handlePacket(packet: ArrayPacket) = MessageHandler.handlePacket(packet)
 	}
 
-	private object MessageHandler {
+	object MessageHandler {
 		private var last = 0L
 		private var lastMessage = ConfigHandler.text
 		private var waiting = false
@@ -70,7 +70,7 @@ class OverlayHandler {
 				return if(lastMessage === ConfigHandler.text)
 					arrayOf("RozHUD is not installed or is disabled on this server")
 				else
-					arrayOf(*lastMessage, "Last server reply was %.2fs ago".format((current - last) / 1000.0))
+					arrayOf(*lastMessage, "Server did not respond to our last request,", "Relog to refresh")
 
 			if(waiting || current <= last + ConfigHandler.refreshInterval)
 				return lastMessage
