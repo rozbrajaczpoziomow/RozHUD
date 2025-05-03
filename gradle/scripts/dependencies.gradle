@@ -80,6 +80,5 @@ dependencies {
 	implementation('io.github.chaosunity.forgelin:Forgelin-Continuous:' + project.forgelin_continuous_version) { transitive = false }
 
 	runtimeOnly rfg.deobf('maven.modrinth:flare:WQfh8odD')
-
-	// implementation 'com.cleanroommc:configanytime:3.0'
+	runtimeOnly rfg.deobf('com.cleanroommc:configanytime:3.0')
 }

@@ -8,9 +8,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.network.FMLNetworkEvent
 import java.awt.Color
 
 class OverlayHandler {
@@ -28,7 +28,7 @@ class OverlayHandler {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	fun drawOverlay(ev: RenderGameOverlayEvent.Post) {
-		if(!ConfigHandler.enabled || ev.type != RenderGameOverlayEvent.ElementType.ALL)
+		if(!ConfigHandler.enabled || ev.type != RenderGameOverlayEvent.ElementType.ALL || ConfigHandler.renderF3 != Minecraft.getMinecraft().gameSettings.showDebugInfo)
 			return
 
 		val renderer = Minecraft.getMinecraft().fontRenderer
@@ -39,7 +39,7 @@ class OverlayHandler {
 		val textOffset = (renderer.FONT_HEIGHT + 1)
 		val messages = MessageHandler.getMessage()
 
-		GuiScreen.drawRect(left, top, left + messages.maxOf { renderer.getStringWidth(it) }, top + textOffset * messages.size, backgroundColour.value)
+		GuiScreen.drawRect(left, top, left + messages.maxOf { renderer.getStringWidth(it) } + 1, top + textOffset * messages.size, backgroundColour.value)
 		GlStateManager.color(1f, 1f, 1f, 1f)
 
 		messages.forEachIndexed { idx, str ->
@@ -47,6 +47,11 @@ class OverlayHandler {
 		}
 
 		GlStateManager.popMatrix()
+	}
+
+	@SubscribeEvent
+	fun serverJoin(ev: FMLNetworkEvent.ClientConnectedToServerEvent) {
+		MessageHandler.reset()
 	}
 
 	companion object {
@@ -60,6 +65,13 @@ class OverlayHandler {
 
 		fun getMessage(): Array<String> {
 			val current = Minecraft.getSystemTime()
+
+			if(waiting && current > last + ConfigHandler.refreshInterval * 3)
+				return if(lastMessage === ConfigHandler.text)
+					arrayOf("RozHUD is not installed or is disabled on this server")
+				else
+					arrayOf(*lastMessage, "Last server reply was %.2fs ago".format((current - last) / 1000.0))
+
 			if(waiting || current <= last + ConfigHandler.refreshInterval)
 				return lastMessage
 
@@ -71,6 +83,12 @@ class OverlayHandler {
 		fun handlePacket(packet: ArrayPacket) {
 			last = Minecraft.getSystemTime()
 			lastMessage = packet.arr
+			waiting = false
+		}
+
+		fun reset() {
+			last = 0L
+			lastMessage = ConfigHandler.text
 			waiting = false
 		}
 	}

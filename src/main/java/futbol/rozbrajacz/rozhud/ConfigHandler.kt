@@ -10,6 +10,10 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 object ConfigHandler {
 	@JvmField
 	@Config.Name("A Enable ${Reference.MOD_NAME}")
+	@Config.Comment(
+		"On client-side, this enables the HUD",
+		"On server-side, this enables replying to requests"
+	)
 	var enabled = false
 
 	@JvmField
@@ -31,19 +35,40 @@ object ConfigHandler {
 	@Config.Name("HUD Text")
 	@Config.Comment(
 		"Text displayed in the HUD",
-		"Available formats: {tps}, {mspt}, {tick}, {entity_count}, {tile_entity_count}, {chunk_count}, {ram_used}, {ram_max}, {cpu_usage}"
+		"Available formats:",
+		"- Server-wide: {tps}, {mspt}, {tick}, {ram_used}, {ram_max}, {cpu_usage}",
+		"- Current dimension: {dim_id}, {dim_tps}, {dim_mspt}, {dim_entity_count}, {dim_tile_entity_count}, {dim_chunk_count}"
 	)
 	var text = arrayOf(
 		"TPS {tps}, {mspt} ms",
-		"E {entity_count}; TE {tile_entity_count}; C {chunk_count}",
-		"RAM {ram_used} / {ram_max} CPU {cpu_usage}"
+		"E {dim_entity_count} TE {dim_tile_entity_count} Ch {dim_chunk_count}",
+		"RAM {ram_used} / {ram_max} GB; CPU {cpu_usage}%"
 	)
+
+	@JvmField
+	@Config.Name("Show HUD with F3")
+	@Config.Comment(
+		"If enabled, the HUD is only shown when the F3 menu is open, if disabled, the HUD is hidden when the F3 menu is open",
+		"If you choose to enable this, I'd recommend changing the default HUD position to not interfere with the F3 menu"
+	)
+	var renderF3 = false
 
 	@JvmField
 	@Config.Name("Refresh Interval")
 	@Config.Comment("Refresh the data that gets shown on the client every x (ms)")
 	@Config.RangeInt(min = 100, max = 5000)
 	var refreshInterval = 500
+
+	@JvmField
+	@Config.Name("Server-only settings")
+	val server = Server()
+
+	class Server {
+		@JvmField
+		@Config.Name("Require operator permissions")
+		@Config.Comment("Only reply to requests from operators")
+		var op = false
+	}
 
 	@Mod.EventBusSubscriber(modid = Reference.MODID)
 	object ConfigEventHandler {
