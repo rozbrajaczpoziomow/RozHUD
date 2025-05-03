@@ -2,6 +2,7 @@ package futbol.rozbrajacz.rozhud.client
 
 import futbol.rozbrajacz.rozhud.ConfigHandler
 import futbol.rozbrajacz.rozhud.ConfigHelper
+import futbol.rozbrajacz.rozhud.Reference
 import futbol.rozbrajacz.rozhud.RozHUD
 import futbol.rozbrajacz.rozhud.net.ArrayPacket
 import net.minecraft.client.Minecraft
@@ -68,7 +69,7 @@ class OverlayHandler {
 
 			if(waiting && current > last + ConfigHandler.refreshInterval * 3)
 				return if(lastMessage === ConfigHandler.text)
-					arrayOf("RozHUD is not installed or is disabled on this server")
+					arrayOf("${Reference.MOD_NAME} is not installed or is disabled on this server")
 				else
 					arrayOf(*lastMessage, "Server did not respond to our last request,", "Relog to refresh")
 

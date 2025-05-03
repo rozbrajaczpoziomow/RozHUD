@@ -2,6 +2,7 @@ package futbol.rozbrajacz.rozhud.net
 
 import com.sun.management.OperatingSystemMXBean
 import futbol.rozbrajacz.rozhud.ConfigHandler
+import futbol.rozbrajacz.rozhud.Reference
 import net.minecraft.server.MinecraftServer
 import net.minecraftforge.common.DimensionManager
 import net.minecraftforge.fml.common.FMLCommonHandler
@@ -47,8 +48,8 @@ class ServerHandler : IMessageHandler<ArrayPacket, ArrayPacket> {
 		put("dim_chunk_count") { getDimension(ctx).chunkProvider.loadedChunkCount.toString() }
 	}
 
-	private val disabledPacket = ArrayPacket(arrayOf("RozHUD has been disabled on this server"))
-	private val requiresOpPacket = ArrayPacket(arrayOf("RozHUD requires OP on this server"))
+	private val disabledPacket = ArrayPacket(arrayOf("${Reference.MOD_NAME} has been disabled on this server"))
+	private val requiresOpPacket = ArrayPacket(arrayOf("${Reference.MOD_NAME} requires OP on this server"))
 
 	override fun onMessage(message: ArrayPacket, ctx: MessageContext): ArrayPacket? {
 		if(!ConfigHandler.enabled)
