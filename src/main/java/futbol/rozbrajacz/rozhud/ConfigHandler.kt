@@ -37,7 +37,8 @@ object ConfigHandler {
 		"Text displayed in the HUD",
 		"Available formats:",
 		"- Server-wide: {tps}, {mspt}, {tick}, {ram_used}, {ram_max}, {cpu_usage}, {ping}",
-		"- Current dimension: {dim_id}, {dim_tps}, {dim_mspt}, {dim_entity_count}, {dim_tile_entity_count}, {dim_chunk_count}"
+		"- Current dimension: {dim_id}, {dim_tps}, {dim_mspt}, {dim_entity_count}, {dim_tile_entity_count}, {dim_chunk_count}",
+		"- Current chunk: {ch_entity_count}, {ch_tile_entity_count}"
 	)
 	var text = arrayOf(
 		"TPS {tps}, {mspt} ms",

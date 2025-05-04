@@ -46,6 +46,11 @@ class ServerHandler : IMessageHandler<ArrayPacket, ArrayPacket> {
 		put("dim_entity_count") { getDimension(ctx).loadedEntityList.size.toString() }
 		put("dim_tile_entity_count") { getDimension(ctx).loadedTileEntityList.size.toString() }
 		put("dim_chunk_count") { getDimension(ctx).chunkProvider.loadedChunkCount.toString() }
+
+		// Current chunk
+		val getChunk = { ctx: MessageContext -> getDimension(ctx).getChunk(ctx.serverHandler.player.position) }
+		put("ch_entity_count") { getChunk(ctx).entityLists.sumOf { it.size }.toString() }
+		put("ch_tile_entity_count") { getChunk(ctx).tileEntityMap.size.toString() }
 	}
 
 	private val disabledPacket = ArrayPacket(arrayOf("${Reference.MOD_NAME} has been disabled on this server"))
