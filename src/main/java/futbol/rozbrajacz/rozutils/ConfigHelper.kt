@@ -1,4 +1,4 @@
-package futbol.rozbrajacz.rozhud
+package futbol.rozbrajacz.rozutils
 
 /**
  * A cached config reader class

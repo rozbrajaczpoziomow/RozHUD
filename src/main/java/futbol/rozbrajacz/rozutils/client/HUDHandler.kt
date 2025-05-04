@@ -1,10 +1,10 @@
-package futbol.rozbrajacz.rozhud.client
+package futbol.rozbrajacz.rozutils.client
 
-import futbol.rozbrajacz.rozhud.ConfigHandler
-import futbol.rozbrajacz.rozhud.ConfigHelper
-import futbol.rozbrajacz.rozhud.Reference
-import futbol.rozbrajacz.rozhud.RozHUD
-import futbol.rozbrajacz.rozhud.net.ArrayPacket
+import futbol.rozbrajacz.rozutils.ConfigHandler
+import futbol.rozbrajacz.rozutils.ConfigHelper
+import futbol.rozbrajacz.rozutils.Reference
+import futbol.rozbrajacz.rozutils.RozUtils
+import futbol.rozbrajacz.rozutils.net.ArrayPacket
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.GlStateManager
@@ -14,8 +14,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
 import java.awt.Color
 
-class OverlayHandler {
-	val coordinates = ConfigHelper({ ConfigHandler.position }) {
+class HUDHandler {
+	val coordinates = ConfigHelper({ ConfigHandler.client.hud.position }) {
 		val split = it.split(',')
 		split[0].toInt() to split[1].toInt()
 	}
@@ -24,12 +24,12 @@ class OverlayHandler {
 		Color(it.substring(1, 3).toInt(16), it.substring(3, 5).toInt(16), it.substring(5, 7).toInt(16), it.substring(7, 9).toInt(16)).rgb
 	}
 
-	val backgroundColour = ConfigHelper({ ConfigHandler.backgroundColour }, colourParser)
-	val textColour = ConfigHelper({ ConfigHandler.textColour }, colourParser)
+	val backgroundColour = ConfigHelper({ ConfigHandler.client.hud.backgroundColour }, colourParser)
+	val textColour = ConfigHelper({ ConfigHandler.client.hud.textColour }, colourParser)
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	fun drawOverlay(ev: RenderGameOverlayEvent.Post) {
-		if(!ConfigHandler.enabled || ev.type != RenderGameOverlayEvent.ElementType.ALL || ConfigHandler.renderF3 != Minecraft.getMinecraft().gameSettings.showDebugInfo)
+		if(!ConfigHandler.client.hud.enabled || ev.type != RenderGameOverlayEvent.ElementType.ALL || ConfigHandler.client.hud.renderF3 != Minecraft.getMinecraft().gameSettings.showDebugInfo)
 			return
 
 		val renderer = Minecraft.getMinecraft().fontRenderer
@@ -61,23 +61,23 @@ class OverlayHandler {
 
 	object MessageHandler {
 		private var last = 0L
-		private var lastMessage = ConfigHandler.text
+		private var lastMessage = ConfigHandler.client.hud.text
 		private var waiting = false
 
 		fun getMessage(): Array<String> {
 			val current = Minecraft.getSystemTime()
 
-			if(waiting && current > last + ConfigHandler.refreshInterval * 3)
-				return if(lastMessage === ConfigHandler.text)
+			if(waiting && current > last + ConfigHandler.client.hud.refreshInterval * 3)
+				return if(lastMessage === ConfigHandler.client.hud.text)
 					arrayOf("${Reference.MOD_NAME} is not installed or is disabled on this server")
 				else
 					arrayOf(*lastMessage, "Server did not respond to our last request,", "Relog to refresh")
 
-			if(waiting || current <= last + ConfigHandler.refreshInterval)
+			if(waiting || current <= last + ConfigHandler.client.hud.refreshInterval)
 				return lastMessage
 
 			waiting = true
-			RozHUD.networkChannel.sendToServer(ArrayPacket(ConfigHandler.text))
+			RozUtils.networkChannel.sendToServer(ArrayPacket(ConfigHandler.client.hud.text))
 			return lastMessage
 		}
 
@@ -89,7 +89,7 @@ class OverlayHandler {
 
 		fun reset() {
 			last = 0L
-			lastMessage = ConfigHandler.text
+			lastMessage = ConfigHandler.client.hud.text
 			waiting = false
 		}
 	}

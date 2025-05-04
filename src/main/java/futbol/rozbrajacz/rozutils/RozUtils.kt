@@ -1,9 +1,9 @@
-package futbol.rozbrajacz.rozhud
+package futbol.rozbrajacz.rozutils
 
-import futbol.rozbrajacz.rozhud.client.OverlayHandler
-import futbol.rozbrajacz.rozhud.net.ArrayPacket
-import futbol.rozbrajacz.rozhud.net.ClientHandler
-import futbol.rozbrajacz.rozhud.net.ServerHandler
+import futbol.rozbrajacz.rozutils.client.HUDHandler
+import futbol.rozbrajacz.rozutils.net.ArrayPacket
+import futbol.rozbrajacz.rozutils.net.ClientHandler
+import futbol.rozbrajacz.rozutils.net.ServerHandler
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.common.FMLCommonHandler
 import net.minecraftforge.fml.common.Mod
@@ -16,11 +16,11 @@ import net.minecraftforge.fml.relauncher.Side
 	modid = Reference.MODID,
 	name = Reference.MOD_NAME,
 	version = Reference.VERSION,
-	dependencies = RozHUD.DEPENDENCIES,
+	dependencies = RozUtils.DEPENDENCIES,
 	modLanguageAdapter = "io.github.chaosunity.forgelin.KotlinAdapter",
 	acceptableRemoteVersions = "*"
 )
-object RozHUD {
+object RozUtils {
 	const val DEPENDENCIES = "required-after:forgelin_continuous@[${Reference.KOTLIN_VERSION},);"
 
 	val networkChannel: SimpleNetworkWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(Reference.MODID)
@@ -29,7 +29,7 @@ object RozHUD {
 	@Mod.EventHandler
 	fun preInit(e: FMLPreInitializationEvent) {
 		if(FMLCommonHandler.instance().effectiveSide.isClient) {
-			val inst = OverlayHandler()
+			val inst = HUDHandler()
 			MinecraftForge.EVENT_BUS.register(inst)
 		}
 		networkChannel.registerMessage(ServerHandler::class.java, ArrayPacket::class.java, 0, Side.SERVER)

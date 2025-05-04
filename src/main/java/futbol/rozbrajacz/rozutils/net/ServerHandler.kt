@@ -1,8 +1,8 @@
-package futbol.rozbrajacz.rozhud.net
+package futbol.rozbrajacz.rozutils.net
 
 import com.sun.management.OperatingSystemMXBean
-import futbol.rozbrajacz.rozhud.ConfigHandler
-import futbol.rozbrajacz.rozhud.Reference
+import futbol.rozbrajacz.rozutils.ConfigHandler
+import futbol.rozbrajacz.rozutils.Reference
 import net.minecraft.server.MinecraftServer
 import net.minecraftforge.common.DimensionManager
 import net.minecraftforge.fml.common.FMLCommonHandler
@@ -57,13 +57,13 @@ class ServerHandler : IMessageHandler<ArrayPacket, ArrayPacket> {
 	private val requiresOpPacket = ArrayPacket(arrayOf("${Reference.MOD_NAME} requires OP on this server"))
 
 	override fun onMessage(message: ArrayPacket, ctx: MessageContext): ArrayPacket? {
-		if(!ConfigHandler.enabled)
-			return if(ConfigHandler.server.ignore) null else disabledPacket
+		if(!ConfigHandler.server.hud.enabled)
+			return if(ConfigHandler.server.hud.ignore) null else disabledPacket
 
 		server = FMLCommonHandler.instance().sidedDelegate.server ?: return null
 
-		if(ConfigHandler.server.op && server.playerList.oppedPlayers.getPermissionLevel(ctx.serverHandler.player.gameProfile) == 0)
-			return if(ConfigHandler.server.ignore) null else requiresOpPacket
+		if(ConfigHandler.server.hud.op && server.playerList.oppedPlayers.getPermissionLevel(ctx.serverHandler.player.gameProfile) == 0)
+			return if(ConfigHandler.server.hud.ignore) null else requiresOpPacket
 
 		val text = message.arr
 		val resp = Array(text.size) { format(text[it], Context(message, ctx)) }
