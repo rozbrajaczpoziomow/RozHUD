@@ -98,12 +98,26 @@ object ConfigHandler {
 			)
 			var ignore = true
 		}
+
+		@JvmField
+		@Config.Name("Command settings")
+		val command = Command()
+
+		class Command {
+			@JvmField
+			@Config.Name("Enable the /rozutils command")
+			var enabled = true
+
+			@JvmField
+			@Config.Name("Require operator permissions")
+			@Config.Comment("Only allow usage of the /rozutils command for operators")
+			var op = true
+		}
 	}
 
 	@Mod.EventBusSubscriber(modid = Reference.MODID)
 	object ConfigEventHandler {
 		@SubscribeEvent
-		@JvmStatic
 		fun onConfigChangedEvent(event: ConfigChangedEvent.OnConfigChangedEvent) {
 			if(event.modID == Reference.MODID)
 				ConfigManager.sync(Reference.MODID, Config.Type.INSTANCE)
