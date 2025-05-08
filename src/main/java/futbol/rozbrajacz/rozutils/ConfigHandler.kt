@@ -105,12 +105,13 @@ object ConfigHandler {
 
 		class Command {
 			@JvmField
+			@Config.RequiresMcRestart
 			@Config.Name("Enable the /rozutils command")
 			var enabled = true
 
 			@JvmField
 			@Config.Name("Require operator permissions")
-			@Config.Comment("Only allow usage of the /rozutils command for operators")
+			@Config.Comment("Only allow usage of the /rozutils command for operators, highly recommended.")
 			var op = true
 		}
 	}

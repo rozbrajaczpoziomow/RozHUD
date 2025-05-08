@@ -40,6 +40,7 @@ object RozUtils {
 
 	@Mod.EventHandler
 	fun serverStarting(e: FMLServerStartingEvent) {
-		e.registerServerCommand(RozUtilsCommand())
+		if(ConfigHandler.server.command.enabled)
+			e.registerServerCommand(RozUtilsCommand())
 	}
 }
