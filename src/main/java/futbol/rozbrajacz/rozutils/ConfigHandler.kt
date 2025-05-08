@@ -41,7 +41,7 @@ object ConfigHandler {
 			@Config.Name("HUD Text")
 			@Config.Comment(
 				"Text displayed in the HUD",
-				"Available formats:",
+				"Available formats:", // when you change this, remember to change server.hud.formats
 				"- Server-wide: {tps}, {mspt}, {tick}, {ram_used}, {ram_max}, {cpu_usage}, {ping}",
 				"- Current dimension: {dim_id}, {dim_tps}, {dim_mspt}, {dim_entity_count}, {dim_tile_entity_count}, {dim_chunk_count}",
 				"- Current chunk: {ch_entity_count}, {ch_tile_entity_count}"
@@ -84,19 +84,22 @@ object ConfigHandler {
 			var enabled = true
 
 			@JvmField
-			@Config.Name("Require operator permissions")
-			@Config.Comment("Only allow usage of the HUD for operators")
-			var op = false
+			@Config.RequiresMcRestart
+			@Config.Name("Enabled formats")
+			@Config.Comment(
+				"Formats allowed to use, separated by commas (,)", // this is not an `arrayOf()` because it's just simpler
+				"Possible formats:", // when you change this, remember to change client.hud.text
+				"- Server-wide: tps, mspt, tick, ram_used, ram_max, cpu_usage, ping",
+				"- Current dimension: dim_id, dim_tps, dim_mspt, dim_entity_count, dim_tile_entity_count, dim_chunk_count",
+				"- Current chunk: ch_entity_count, ch_tile_entity_count"
+			)
+			var formats = "tps,mspt,tick,ram_used,ram_max,cpu_usage,ping,dim_id,dim_tps,dim_mspt,dim_chunk_count,ch_entity_count,ch_tile_entity_count"
 
 			@JvmField
-			@Config.Name("Ignore blocked requests")
-			@Config.Comment(
-				"If the HUD is disabled, or requires operator permissions:",
-				"Whether to ignore (true) requests, or reply (false) to them with a message saying why the request has been blocked",
-				"Ignoring has the benefit of the player not sending any more requests until they relog",
-				"Replying has the benefit of the player knowing why their request has been blocked, and if they get unblocked, sending back proper data will not require a relog on the player's side"
-			)
-			var ignore = true
+			@Config.RequiresMcRestart
+			@Config.Name("Operators bypass enabled formats")
+			@Config.Comment("Make operators bypass the enabled formats")
+			var opBypass = true
 		}
 
 		@JvmField
