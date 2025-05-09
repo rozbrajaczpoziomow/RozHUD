@@ -51,9 +51,7 @@ class HUDHandler {
 	}
 
 	@SubscribeEvent
-	fun serverJoin(ev: FMLNetworkEvent.ClientConnectedToServerEvent) {
-		MessageHandler.reset()
-	}
+	fun serverJoin(ev: FMLNetworkEvent.ClientConnectedToServerEvent) = MessageHandler.reset()
 
 	companion object {
 		fun handlePacket(packet: ArrayPacket) = MessageHandler.handlePacket(packet)
