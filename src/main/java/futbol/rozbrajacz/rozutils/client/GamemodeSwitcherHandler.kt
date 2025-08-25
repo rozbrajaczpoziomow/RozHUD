@@ -96,7 +96,7 @@ class GamemodeSwitcherHandler {
 			// draw main bg
 			drawTexturedModalRect(guiX, guiY, 0, 0, MAIN_WIDTH, MAIN_HEIGHT)
 
-			// draw slots/selectd, update selected based on mouse
+			// draw slots/selected, update selected based on mouse
 			repeat(gamemodes.size) {
 				val x = guiX + SLOT_OFFSET_X + (SLOT_WIDTH + SLOT_OFFSET_W) * it
 				val y = guiY + SLOT_OFFSET_Y
