@@ -7,7 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext
 
 class ClientHandler : IMessageHandler<ArrayPacket, IMessage> {
 	override fun onMessage(message: ArrayPacket, ctx: MessageContext): IMessage? {
-		HUDHandler.handlePacket(message)
+		HUDHandler.MessageHandler.handlePacket(message)
 		return null
 	}
 }

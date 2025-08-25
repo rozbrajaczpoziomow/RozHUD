@@ -66,6 +66,16 @@ object ConfigHandler {
 			@Config.RangeInt(min = 100, max = 5000)
 			var refreshInterval = 500
 		}
+
+		@JvmField
+		@Config.Name("Gamemode Switcher settings")
+		val gamemodeSwitcher = GamemodeSwitcher()
+
+		class GamemodeSwitcher {
+			@JvmField
+			@Config.Name("Enable the Gamemode Switcher from 1.16+")
+			var enabled = true
+		}
 	}
 
 	@JvmField

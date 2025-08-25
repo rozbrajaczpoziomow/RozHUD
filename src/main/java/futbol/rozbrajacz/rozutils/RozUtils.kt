@@ -1,5 +1,6 @@
 package futbol.rozbrajacz.rozutils
 
+import futbol.rozbrajacz.rozutils.client.GamemodeSwitcherHandler
 import futbol.rozbrajacz.rozutils.client.HUDHandler
 import futbol.rozbrajacz.rozutils.commands.RozUtilsCommand
 import futbol.rozbrajacz.rozutils.net.ArrayPacket
@@ -31,8 +32,8 @@ object RozUtils {
 	@Mod.EventHandler
 	fun preInit(e: FMLPreInitializationEvent) {
 		if(FMLCommonHandler.instance().effectiveSide.isClient) {
-			val inst = HUDHandler()
-			MinecraftForge.EVENT_BUS.register(inst)
+			MinecraftForge.EVENT_BUS.register(HUDHandler.instance)
+			MinecraftForge.EVENT_BUS.register(GamemodeSwitcherHandler.instance)
 		}
 		networkChannel.registerMessage(ServerHandler::class.java, ArrayPacket::class.java, 0, Side.SERVER)
 		networkChannel.registerMessage(ClientHandler::class.java, ArrayPacket::class.java, 0, Side.CLIENT)

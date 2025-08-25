@@ -15,6 +15,11 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent
 import java.awt.Color
 
 class HUDHandler {
+	companion object {
+		val instance = HUDHandler()
+	}
+	private constructor()
+
 	val coordinates = ConfigHelper({ ConfigHandler.client.hud.position }) {
 		val split = it.split(',')
 		split[0].toInt() to split[1].toInt()
@@ -35,13 +40,15 @@ class HUDHandler {
 		val renderer = Minecraft.getMinecraft().fontRenderer
 
 		GlStateManager.pushMatrix()
+		GlStateManager.color(1f, 1f, 1f, 1f)
+		GlStateManager.enableAlpha()
+		GlStateManager.enableBlend()
 
 		val (left, top) = coordinates.value
 		val textOffset = (renderer.FONT_HEIGHT + 1)
 		val messages = MessageHandler.getMessage()
 
 		GuiScreen.drawRect(left, top, left + messages.maxOf { renderer.getStringWidth(it) } + 1, top + textOffset * messages.size, backgroundColour.value)
-		GlStateManager.color(1f, 1f, 1f, 1f)
 
 		messages.forEachIndexed { idx, str ->
 			renderer.drawString(str, left + 1, top + 1 + textOffset * idx, textColour.value)
@@ -52,10 +59,6 @@ class HUDHandler {
 
 	@SubscribeEvent
 	fun serverJoin(ev: FMLNetworkEvent.ClientConnectedToServerEvent) = MessageHandler.reset()
-
-	companion object {
-		fun handlePacket(packet: ArrayPacket) = MessageHandler.handlePacket(packet)
-	}
 
 	object MessageHandler {
 		private var last = 0L
