@@ -15,6 +15,7 @@ package futbol.rozbrajacz.rozutils
 	along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+import futbol.rozbrajacz.rozutils.client.ClientEventHandler
 import futbol.rozbrajacz.rozutils.client.GamemodeSwitcherHandler
 import futbol.rozbrajacz.rozutils.client.HUDHandler
 import futbol.rozbrajacz.rozutils.commands.RozUtilsCommand
@@ -49,6 +50,7 @@ object RozUtils {
 		if(FMLCommonHandler.instance().effectiveSide.isClient) {
 			MinecraftForge.EVENT_BUS.register(HUDHandler.instance)
 			MinecraftForge.EVENT_BUS.register(GamemodeSwitcherHandler.instance)
+			MinecraftForge.EVENT_BUS.register(ClientEventHandler.instance)
 		}
 		networkChannel.registerMessage(ServerHandler::class.java, ArrayPacket::class.java, 0, Side.SERVER)
 		networkChannel.registerMessage(ClientHandler::class.java, ArrayPacket::class.java, 0, Side.CLIENT)
@@ -57,6 +59,11 @@ object RozUtils {
 	@Mod.EventHandler
 	fun serverStarting(e: FMLServerStartingEvent) {
 		if(ConfigHandler.server.command.enabled)
-			e.registerServerCommand(RozUtilsCommand())
+			e.registerServerCommand(RozUtilsCommand.instance)
 	}
+
+	const val VERSION = "${Reference.MOD_NAME} [%s] ${Reference.VERSION} (${Reference.GIT_COMMIT_HASH_SHORT}) built on ${Reference.BUILD_DATE}"
+
+	internal fun formatVersion(side: String) =
+		VERSION.format(side)
 }

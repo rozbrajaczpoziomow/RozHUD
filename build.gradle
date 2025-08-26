@@ -115,7 +115,19 @@ minecraft {
         }
     }
 
-    injectedTags.put 'GROOVY_VERSION', groovy_version
+	injectedTags.put 'BUILD_DATE', (new Date()).format("dd.MM.yyyy")
+
+	injectedTags.put 'GIT_COMMIT_HASH_SHORT', 'x'
+	injectedTags.put 'GIT_COMMIT_HASH', 'x'
+
+	if (file('.git/HEAD').exists()) {
+		String ref = file('.git/HEAD').readLines()[0].split(": ")[1]
+		if (file('.git/' + ref).exists()) {
+			String hash = file('.git/' + ref).readLines()[0]
+			injectedTags.put 'GIT_COMMIT_HASH_SHORT', hash.substring(0, 7)
+			injectedTags.put 'GIT_COMMIT_HASH', hash
+		}
+	}
 
     if (project.debug_use_examples_folder.toBoolean()) {
         extraRunJvmArguments.add('-Dgroovyscript.use_examples_folder=true')
